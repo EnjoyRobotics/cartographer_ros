@@ -61,13 +61,23 @@ visualization_msgs::msg::Marker CreateTrajectoryMarker(const int trajectory_id,
 int GetLandmarkIndex(
     const std::string& landmark_id,
     std::unordered_map<std::string, int>* landmark_id_to_index) {
-  auto it = landmark_id_to_index->find(landmark_id);
-  if (it == landmark_id_to_index->end()) {
-    const int new_index = landmark_id_to_index->size();
-    landmark_id_to_index->emplace(landmark_id, new_index);
-    return new_index;
+  int new_index;
+  try {
+    // try casting index to int
+    new_index = std::stoi(landmark_id);
   }
-  return it->second;
+  catch (...) {
+    // if casting not possible give it a new unique id
+    auto it = landmark_id_to_index->find(landmark_id);
+    if (it == landmark_id_to_index->end()) {
+      new_index = landmark_id_to_index->size() + 1000;
+      landmark_id_to_index->emplace(landmark_id, new_index);
+    }
+    else {
+      new_index = it->second;
+    }
+  }
+  return new_index;
 }
 
 visualization_msgs::msg::Marker CreateLandmarkMarker(int landmark_index,
