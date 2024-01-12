@@ -80,19 +80,21 @@ int GetLandmarkIndex(
   return new_index;
 }
 
-visualization_msgs::msg::Marker CreateLandmarkMarker(int landmark_index,
-                                                const Rigid3d& landmark_pose,
-                                                const std::string& frame_id,
-                                                rclcpp::Time node_time) {
+visualization_msgs::msg::Marker CreateLandmarkMarker(
+  int landmark_index,
+  const Rigid3d & landmark_pose,
+  const std::string & frame_id,
+  rclcpp::Time node_time)
+{
   visualization_msgs::msg::Marker marker;
   marker.ns = "Landmarks";
   marker.id = landmark_index;
-  marker.type = visualization_msgs::msg::Marker::SPHERE;
+  marker.type = visualization_msgs::msg::Marker::ARROW;
   marker.header.stamp = node_time;
   marker.header.frame_id = frame_id;
   marker.scale.x = kLandmarkMarkerScale;
-  marker.scale.y = kLandmarkMarkerScale;
-  marker.scale.z = kLandmarkMarkerScale;
+  marker.scale.y = kLandmarkMarkerScale * 0.25;
+  marker.scale.z = kLandmarkMarkerScale * 0.25;
   marker.color = ToMessage(cartographer::io::GetColor(landmark_index));
   marker.pose = ToGeometryMsgPose(landmark_pose);
   return marker;
